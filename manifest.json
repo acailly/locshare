@@ -1,0 +1,14 @@
+{
+  "name": "locshare",
+  "short_name": "locshare",
+  "description": "Share locations",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000",
+  "theme_color": "#000",
+  "icons": [{
+    "src": "/assets/icon.png",
+    "type": "image/png",
+    "sizes": "512x512"
+  }]
+}
