@@ -12,12 +12,12 @@ const leaflet = new Leaflet();
 function view(state, emit) {
   if (state.title !== TITLE) emit(state.events.DOMTITLECHANGE, TITLE);
 
-  const saveMyLocation = latlng => emit("mylocation:set", latlng);
+  const saveMyPosition = latlng => emit("myposition:set", latlng);
 
   return html`
     <body>
-      ${myLocation.render(saveMyLocation)}
-      ${leaflet.render(state.mylocation)}
+      ${myLocation.render(saveMyPosition)}
+      ${leaflet.render(state.positions)}
     </body>
   `;
 }

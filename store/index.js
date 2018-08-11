@@ -1,9 +1,9 @@
 export default store;
 
 function store(state, emitter) {
-  state.username = "";
+  state.username = "unknown";
   state.team = "";
-  state.mylocation = null;
+  state.positions = {};
 
   emitter.on("DOMContentLoaded", function() {
     emitter.on("username:set", function(username) {
@@ -14,9 +14,14 @@ function store(state, emitter) {
       state.team = team;
       emitter.emit(state.events.RENDER);
     });
-    emitter.on("mylocation:set", function(latlng) {
-      state.mylocation = latlng;
-      emitter.emit(state.events.RENDER);
+    emitter.on("myposition:set", function(position) {
+      if (state.username) {
+        state.positions = Object.assign({}, state.positions);
+        state.positions[state.username] = position;
+        emitter.emit(state.events.RENDER);
+      } else {
+        console.error("Username is not set, can't update my location");
+      }
     });
   });
 }

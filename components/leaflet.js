@@ -12,11 +12,12 @@ class Leaflet extends Nanocomponent {
 
     this._log = nanologger("Leaflet");
     this.map = null;
-    this.mylocation = null;
+    this.positions = null;
+    this.circles = {};
   }
 
-  createElement(mylocation) {
-    this.mylocation = mylocation;
+  createElement(positions) {
+    this.positions = positions;
     return html`
       <div style="height: 100vh">
         <div id="map"></div>
@@ -24,24 +25,29 @@ class Leaflet extends Nanocomponent {
     `;
   }
 
-  update(mylocation) {
+  update(positions) {
     if (!this.map) return this._log.warn("missing map", "failed to update");
-    if (mylocation !== this.mylocation) {
+    if (positions !== this.positions) {
       onIdle(() => {
-        this.mylocation = mylocation;
-        this._log.info("update-mylocation", mylocation);
+        this.positions = positions;
+        this._log.info("update-myposition", positions);
 
-        const { latitude, longitude, accuracy } = mylocation;
+        const usernames = Object.keys(positions);
 
-        leaflet
-          .marker({ lat: latitude, lng: longitude })
-          .addTo(this.map)
-          .bindPopup("You are here")
-          .openPopup();
+        usernames.forEach(username => {
+          const { latitude, longitude, accuracy } = positions[username];
 
-        leaflet
-          .circle({ lat: latitude, lng: longitude }, accuracy)
-          .addTo(this.map);
+          const circle = leaflet
+            .circle({ lat: latitude, lng: longitude }, accuracy / 2.0)
+            .addTo(this.map);
+
+          if (this.circles[username]) {
+            this.map.removeLayer(this.circles[username]);
+          }
+          this.circles[username] = circle;
+
+          circle.bindPopup(username).openPopup();
+        });
       });
     }
     return false;
@@ -77,6 +83,7 @@ class Leaflet extends Nanocomponent {
 
     this.map.remove();
     this.map = null;
+    this.positions = null;
   }
 }
 
