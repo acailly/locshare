@@ -3,7 +3,7 @@ export default store;
 function store(state, emitter) {
   state.username = "";
   state.team = "";
-  state.coords = [39.9526, -75.1652];
+  state.mylocation = null;
 
   emitter.on("DOMContentLoaded", function() {
     emitter.on("username:set", function(username) {
@@ -12,6 +12,10 @@ function store(state, emitter) {
     });
     emitter.on("team:set", function(team) {
       state.team = team;
+      emitter.emit(state.events.RENDER);
+    });
+    emitter.on("mylocation:set", function(latlng) {
+      state.mylocation = latlng;
       emitter.emit(state.events.RENDER);
     });
   });

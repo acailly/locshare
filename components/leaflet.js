@@ -10,13 +10,13 @@ class Leaflet extends Nanocomponent {
   constructor() {
     super();
 
-    this._log = nanologger("leaflet");
-    this.map = null; // capture leaflet
-    this.coords = [0, 0]; // null island
+    this._log = nanologger("Leaflet");
+    this.map = null;
+    this.mylocation = null;
   }
 
-  createElement(coords) {
-    this.coords = coords;
+  createElement(mylocation) {
+    this.mylocation = mylocation;
     return html`
       <div style="height: 100vh">
         <div id="map"></div>
@@ -24,26 +24,37 @@ class Leaflet extends Nanocomponent {
     `;
   }
 
-  update() {
+  update(mylocation) {
     if (!this.map) return this._log.warn("missing map", "failed to update");
-    if (coords[0] !== this.coords[0] || coords[1] !== this.coords[1]) {
-      const self = this;
-      onIdle(function() {
-        self.coords = coords;
-        self._log.info("update-map", coords);
-        self.map.setView(coords, 12);
+    if (mylocation !== this.mylocation) {
+      onIdle(() => {
+        this.mylocation = mylocation;
+        this._log.info("update-mylocation", mylocation);
+
+        const { latitude, longitude, accuracy } = mylocation;
+
+        leaflet
+          .marker({ lat: latitude, lng: longitude })
+          .addTo(this.map)
+          .bindPopup("You are here")
+          .openPopup();
+
+        leaflet
+          .circle({ lat: latitude, lng: longitude }, accuracy)
+          .addTo(this.map);
       });
     }
     return false;
   }
 
   beforerender(el) {
-    const coords = this.coords;
-    this._log.info("create-map", coords);
+    this._log.info("create-map");
 
-    const map = leaflet.map(el).setView(coords, 12);
+    const map = leaflet.map(el);
 
-    const tileLayer = L.tileLayer(
+    map.locate({ setView: true, maxZoom: 16 });
+
+    const tileLayer = leaflet.tileLayer(
       "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       {
         maxZoom: 19,
@@ -66,7 +77,6 @@ class Leaflet extends Nanocomponent {
 
     this.map.remove();
     this.map = null;
-    this.coords = [0, 0];
   }
 }
 
