@@ -1,11 +1,11 @@
-var html = require('choo/html')
+import html from "choo/html";
 
-var TITLE = 'locshare - main'
+var TITLE = "locshare - main";
 
-module.exports = view
+export default view;
 
-function view (state, emit) {
-  if (state.title !== TITLE) emit(state.events.DOMTITLECHANGE, TITLE)
+function view(state, emit) {
+  if (state.title !== TITLE) emit(state.events.DOMTITLECHANGE, TITLE);
 
   return html`
     <body class="code lh-copy">
@@ -150,9 +150,9 @@ function view (state, emit) {
         </section>
       </main>
     </body>
-  `
+  `;
 
-  function handleClick () {
-    emit('clicks:add', 1)
+  function handleClick() {
+    emit("clicks:add", 1);
   }
 }

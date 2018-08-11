@@ -1,18 +1,24 @@
-var css = require('sheetify')
-var choo = require('choo')
+import choo from "choo";
+import "bulma/css/bulma.min.css";
 
-css('tachyons')
+import store from "./store";
 
-var app = choo()
-if (process.env.NODE_ENV !== 'production') {
-  app.use(require('choo-devtools')())
+import viewLogin from "./views/login";
+import viewLocations from "./views/locations";
+import view404 from "./views/404";
+
+var app = choo();
+if (process.env.NODE_ENV !== "production") {
+  app.use(require("choo-devtools")());
 } else {
-  app.use(require('choo-service-worker')())
+  app.use(require("choo-service-worker")());
 }
 
-app.use(require('./stores/clicks'))
+app.use(store);
 
-app.route('/', require('./views/main'))
-app.route('/*', require('./views/404'))
+app.route("/", viewLogin);
+app.route("/login", viewLogin);
+app.route("/locations", viewLocations);
+app.route("/*", view404);
 
-module.exports = app.mount('body')
+export default app.mount("body");
