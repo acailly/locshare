@@ -1,8 +1,8 @@
 import html from "choo/html";
-import Nanocomponent from "nanocomponent";
+import Component from "choo/component";
 import nanologger from "nanologger";
 
-class MyLocation extends Nanocomponent {
+class MyLocation extends Component {
   constructor() {
     super();
     this._log = nanologger("MyLocation");

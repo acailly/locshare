@@ -1,12 +1,12 @@
 // From https://raw.githubusercontent.com/choojs/nanocomponent/master/example/leaflet.js
 import html from "choo/html";
-import Nanocomponent from "nanocomponent";
+import Component from "choo/component";
 import nanologger from "nanologger";
 import leaflet from "leaflet";
 import onIdle from "on-idle";
 import "leaflet/dist/leaflet.css";
 
-class Leaflet extends Nanocomponent {
+class Leaflet extends Component {
   constructor() {
     super();
 
