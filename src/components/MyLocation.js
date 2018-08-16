@@ -21,7 +21,8 @@ class MyLocation extends Component {
 
       this.watchID = navigator.geolocation.watchPosition(
         position => {
-          updateLocation(position.coords);
+          const { latitude, longitude, accuracy } = position.coords;
+          updateLocation({ latitude, longitude, accuracy });
         },
         () => {
           alert("Location error");

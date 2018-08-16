@@ -25,7 +25,7 @@ function view(state, emit) {
     const team = document.forms["login"]["team"].value;
     emit("username:set", username);
     emit("team:set", team);
-    emit("room:enter", "acailly-locshare"); // TODO ACY Utiliser le nom de la team
+    emit("room:enter", "acailly-locshare-" + team);
     emit("pushState", "/locshare/locations");
   }
 }
