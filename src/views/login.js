@@ -16,7 +16,7 @@ function view(state, emit) {
         <input id="team" class="input" type="text" placeholder="Guardians of the Galaxy">
         <input class="button" type="submit" value="Submit">
       </form>
-      <a href="/locations">Locations</a>
+      <a href="/locshare/locations">Locations</a>
     </body>
   `;
 

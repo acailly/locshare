@@ -16,9 +16,10 @@ if (process.env.NODE_ENV !== "production") {
 app.use(userStore);
 app.use(ipfsStore);
 
-app.route("/", viewLogin);
-app.route("/login", viewLogin);
-app.route("/locations", viewLocations);
+app.route("/locshare", viewLogin);
+app.route("/locshare/login", viewLogin);
+app.route("/locshare/locations", viewLocations);
 app.route("/*", view404);
+app.route("/locshare/*", view404);
 
 export default app.mount("body");
