@@ -11,12 +11,11 @@ function view(state, emit) {
     <body>
       <form id="login" onsubmit=${handleSubmit}>
         <label for="username">User name</label>
-        <input id="username" class="input" type="text" placeholder="Rocket Raccoon">
+        <input id="username" class="input" type="text" placeholder="Rocket Raccoon" required>
         <label for="team">Team</label>
-        <input id="team" class="input" type="text" placeholder="Guardians of the Galaxy">
-        <input class="button" type="submit" value="Submit">
+        <input id="team" class="input" type="text" placeholder="Guardians of the Galaxy" required>
+        <input class="button" type="submit" value="Show locations">
       </form>
-      <a href="/locshare/locations">Locations</a>
     </body>
   `;
 
@@ -26,5 +25,7 @@ function view(state, emit) {
     const team = document.forms["login"]["team"].value;
     emit("username:set", username);
     emit("team:set", team);
+    emit("room:enter", "acailly-locshare"); // TODO ACY Utiliser le nom de la team
+    emit("pushState", "/locshare/locations");
   }
 }

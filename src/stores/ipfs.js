@@ -9,10 +9,12 @@ Y.extend(yArray, yIpfs, yMemory, yMap);
 export default store;
 
 function store(state, emitter) {
-  initIpfsStore(state, emitter);
+  emitter.on("room:enter", function(roomName) {
+    initIpfsStore(state, emitter, roomName);
+  });
 }
 
-function initIpfsStore(state, emitter) {
+function initIpfsStore(state, emitter, roomName) {
   console.log("Initializing IPFS...");
   var repo = "ipfs/acailly-locshare/" + Math.random();
 
@@ -20,6 +22,14 @@ function initIpfsStore(state, emitter) {
     repo: repo,
     EXPERIMENTAL: {
       pubsub: true
+    },
+    config: {
+      Addresses: {
+        Swarm: [
+          // '/dns4/wrtc-star.discovery.libp2p.io/tcp/443/wss/p2p-webrtc-star' //MORE "BROWSERISH", BUT LESS STABLE
+          "/dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-websocket-star" //MORE STABLE, PREFFERRED FOR LIVE DEMO
+        ]
+      }
     }
   });
 
@@ -52,7 +62,7 @@ function initIpfsStore(state, emitter) {
           },
           connector: {
             name: "ipfs",
-            room: "acailly-locshare",
+            room: roomName,
             ipfs: ipfs
           },
           share: {
@@ -64,7 +74,6 @@ function initIpfsStore(state, emitter) {
             const users = y.share.positions.keys();
             users.forEach(user => {
               const userPosition = y.share.positions.get(user);
-              console.log("DEBUG updated user position is", user, userPosition); //TODO ACY
               state.positions[user] = userPosition;
             });
             emitter.emit(state.events.RENDER);
@@ -72,12 +81,21 @@ function initIpfsStore(state, emitter) {
 
           emitter.on("myposition:set", function(position) {
             if (state.username) {
-              console.log("Updating position of", state.username); //TODO ACY
               y.share.positions.set(state.username, position);
             } else {
               console.error("Username is not set, can't update my location");
             }
           });
+
+          setInterval(() => {
+            ipfs.pubsub.peers("y-ipfs:rooms:" + roomName, (err, peerIds) => {
+              if (err) {
+                throw err;
+              }
+              const peerCount = peerIds.length + 1;
+              console.log("Peer count", peerCount);
+            });
+          }, 5000);
         });
       });
     });
