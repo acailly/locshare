@@ -12,7 +12,10 @@ const leaflet = new Leaflet();
 function view(state, emit) {
   if (state.title !== TITLE) emit(state.events.DOMTITLECHANGE, TITLE);
 
-  const saveMyPosition = latlng => emit("myposition:set", latlng);
+  const saveMyPosition = latlng => {
+    console.log("Emitting a change on my position"); //TODO ACY
+    emit("myposition:set", latlng);
+  };
 
   return html`
     <body>
